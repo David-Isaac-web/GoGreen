@@ -3,6 +3,7 @@ import { render, screen, fireEvent, waitFor, within } from '@testing-library/rea
 import { HelmetProvider } from 'react-helmet-async';
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 import Dashboard from '../Dashboard';
+import FarmerProfile from '../FarmerProfile';
 import { api } from '../../api/client';
 
 vi.mock('../../api/client', () => ({
@@ -158,5 +159,24 @@ describe('Dashboard - delete confirmation flow', () => {
 
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
     expect(api.deleteProduct).not.toHaveBeenCalled();
+  });
+});
+
+describe('FarmerProfile - verified badge', () => {
+  it('renders the verified badge for a verified farmer', async () => {
+    api.getFarmer.mockResolvedValue({
+      id: 'farmer-1',
+      name: 'Verified Farmer',
+      verified: true,
+      products: [],
+    });
+
+    render(
+      <HelmetProvider>
+        <FarmerProfile />
+      </HelmetProvider>
+    );
+
+    expect(await screen.findByText(/verified/i)).toBeInTheDocument();
   });
 });
