@@ -74,6 +74,13 @@ jobs:
         working-directory: .
         run: node backend/scripts/check-migration-undos.js
 
+      # #172 — Run the full backend Jest suite from the backend directory.
+      # This covers both backend/src/__tests__ and backend/tests (route and
+      # middleware tests for batches, bundles, sseAuth, https and auditLog).
+      # Any failing test file fails the job.
+      - name: Run backend Jest suite
+        run: npm test
+
       - name: Run tests with coverage
         run: npm run test:coverage
 
